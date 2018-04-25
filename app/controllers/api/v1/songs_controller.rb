@@ -1,12 +1,12 @@
 class Api::V1::SongsController < ApplicationController
-  
+
   GENIUS_API = "http://api.genius.com"
   GENIUS_URL = "https://genius.com"
   HEADERS = {'Authorization': 'Bearer qPqcniBSqCRmAfSWud8z2x6L_eQrMynoE1wlRNtNN6w5ATq2T4WKjjKkksZjMXWh'}
 
   def create
-    song_title = params[:song]
-    artist_name = params[:artist]
+    song_title = params[:song].downcase.capitalize.strip
+    artist_name = params[:artist].downcase.capitalize.strip
     song = Song.find_by(name: song_title, artist: artist_name)
     if song != nil
       render json: song and return
@@ -44,6 +44,12 @@ class Api::V1::SongsController < ApplicationController
     lyrics = doc.css(".lyrics").text
   end
 
+  def update
+    song = Song.find(params[:id])
+    song.update(lyrics: params[:lyrics])
+
+    render json: song
+  end
   private
 
   def song_params
