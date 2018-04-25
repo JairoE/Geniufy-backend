@@ -2,7 +2,7 @@ class Api::V1::SongsController < ApplicationController
 
   GENIUS_API = "http://api.genius.com"
   GENIUS_URL = "https://genius.com"
-  HEADERS = {'Authorization': 'Bearer qPqcniBSqCRmAfSWud8z2x6L_eQrMynoE1wlRNtNN6w5ATq2T4WKjjKkksZjMXWh'}
+  HEADERS = {'Authorization': 'Bearer '+geniusk.k.genius}
 
   def create
     song_title = params[:song].downcase.capitalize.strip
