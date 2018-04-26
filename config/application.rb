@@ -12,7 +12,6 @@ require "action_cable/engine"
 require 'open-uri'
 require 'uri'
 require 'action_view'
-require '../geniusk.rb'
 # require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 

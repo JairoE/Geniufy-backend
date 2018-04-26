@@ -2,7 +2,7 @@ class Api::V1::SongsController < ApplicationController
 
   GENIUS_API = "http://api.genius.com"
   GENIUS_URL = "https://genius.com"
-  HEADERS = {'Authorization': 'Bearer '+geniusk.k.genius}
+  HEADERS = {'Authorization': 'Bearer '+ GENIUSK}
 
   def create
     song_title = params[:song].downcase.capitalize.strip
@@ -43,6 +43,7 @@ class Api::V1::SongsController < ApplicationController
     doc = Nokogiri::HTML(html)
     lyrics = doc.css(".lyrics").text
   end
+
 
   def update
     song = Song.find(params[:id])
