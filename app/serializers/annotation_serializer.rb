@@ -1,3 +1,3 @@
 class AnnotationSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :annotation
 end
