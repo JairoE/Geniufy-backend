@@ -8,6 +8,9 @@ Rails.application.routes.draw do
       resources :songs, only: [:index, :create, :show, :update] do
         resources :annotations, only: [:index, :create, :show]
       end
+
+      post '/fetchSongs', to: 'songs#fetchSongs'
+      get '/login', to: 'users#login'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

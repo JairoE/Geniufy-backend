@@ -25,6 +25,7 @@ gem 'puma', '~> 3.7'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 gem 'active_model_serializers'
+gem 'figaro'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -38,7 +39,6 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'json'
   gem 'rest-client'
-  gem 'musix_match'
   gem 'nokogiri'
 end
 

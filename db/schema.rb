@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20180425191135) do
   create_table "songs", force: :cascade do |t|
     t.string "name"
     t.string "artist"
+    t.string "genius_api_path"
     t.text "lyrics"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

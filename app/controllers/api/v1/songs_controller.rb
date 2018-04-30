@@ -5,31 +5,13 @@ class Api::V1::SongsController < ApplicationController
   HEADERS = {'Authorization': 'Bearer '+ GENIUSK}
 
   def create
-    song_title = params[:song].downcase.capitalize.strip
-    artist_name = params[:artist].downcase.capitalize.strip
-    song = Song.find_by(name: song_title, artist: artist_name)
+
+    song = Song.find_by(genius_api_path: params[:api_link])
     if song != nil
       render json: song and return
-    else
-      song = Song.create(name: song_title, artist: artist_name)
     end
 
-    url = GENIUS_API + "/search?q=" + song_title.gsub(" ", "%20")
-    json = JSON.parse(RestClient.get(url, headers=HEADERS))
-    song_info = nil
-    json["response"]["hits"].each do |hit|
-      nameWithoutAccents = ActiveSupport::Inflector.transliterate(hit["result"]["primary_artist"]["name"])
-      # casecmp outputs 0 if the two strings are the same regardless of capitalization
-      if nameWithoutAccents.casecmp(artist_name)==0 && song_info == nil
-        song_info = hit
-      end
-    end
-    lyrics = nil
-    if song_info != nil
-      lyrics = lyrics_from_song_api(song_info["result"]["api_path"])
-    end
-
-    song.update(lyrics: (lyrics).gsub("\n", "<br />"))
+    song = lyrics_from_song_api(params[:api_link])
 
     render json: song
   end
@@ -41,9 +23,24 @@ class Api::V1::SongsController < ApplicationController
     song_page_url = GENIUS_URL + song_path
     html = open(song_page_url)
     doc = Nokogiri::HTML(html)
-    lyrics = doc.css(".lyrics").text
+    lyrics = doc.css(".lyrics").text.gsub("\n", "<br />")
+    Song.create(name: json["response"]["song"]["title"],
+                artist: json["response"]["song"]["primary_artist"]["name"],
+                lyrics: lyrics,
+                genius_api_path: path)
   end
 
+  def fetchSongs
+    song = params[:input]
+    url = GENIUS_API + "/search?q=" + song.gsub(" ", "%20")
+    json = JSON.parse(RestClient.get(url, headers=HEADERS))
+
+    songs = json["response"]["hits"].map do |hit|
+            {full_song: hit["result"]["full_title"], api_path: hit["result"]["api_path"], song_image: hit["result"]["header_image_thumbnail_url"]}
+          end
+
+    render json: songs
+  end
 
   def update
     song = Song.find(params[:id])

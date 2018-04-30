@@ -16,3 +16,6 @@
 .byebug_history
 
 config/geniusk.rb
+
+# Ignore application configuration
+/config/application.yml
