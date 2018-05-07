@@ -42,6 +42,25 @@ class Api::V1::SongsController < ApplicationController
     render json: songs
   end
 
+  def playSong
+    song = params[:song]
+    url = GENIUS_API + "/search?q=" + song.gsub(" ", "%20")
+    json = JSON.parse(RestClient.get(url, headers=HEADERS))
+
+    songapi = json["response"]["hits"].select do |hit|
+      hit["result"]["primary_artist"]["name"] == params[:artist]
+    end[0]["result"]["api_path"]
+
+    song = Song.find_by(genius_api_path: songapi)
+    if song != nil
+      render json: song and return
+    end
+
+    song = lyrics_from_song_api(songapi)
+
+    render json: song
+  end
+
   def update
     song = Song.find(params[:id])
     song.update(lyrics: params[:lyrics])

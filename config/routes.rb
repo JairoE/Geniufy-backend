@@ -11,6 +11,11 @@ Rails.application.routes.draw do
 
       post '/fetchSongs', to: 'songs#fetchSongs'
       get '/login', to: 'users#login'
+      post '/postLogin', to: 'users#postLogin'
+      post '/getPlaylists', to: 'playlists#getPlaylists'
+      post '/getPlaylistTracks', to: 'playlists#getPlaylistTracks'
+      post '/playTrack', to: 'playlists#playTrack'
+      post '/playSong', to: 'songs#playSong'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
