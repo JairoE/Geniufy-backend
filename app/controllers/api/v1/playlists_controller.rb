@@ -60,10 +60,38 @@ class Api::V1::PlaylistsController < ApplicationController
     device = devices.select do |device|
       device["name"] == "Music Player"
     end
+    @user.update(current_device_id: device[0]["id"])
     payload = {uris: [params["trackId"]]}
-    puts payload.to_json
     playTrack = JSON.parse(RestClient.put(SPOTIFY+"/me/player/play?device_id=#{device[0]["id"]}", payload.to_json, header))
     render json: {success: "true"}
   end
 
+  def play
+    decodedId = JWT.decode(params[:jwt], ENV['MY_SECRET'], ENV["OTHER"])
+    @user = User.find(decodedId[0]["user_id"])
+    header = {Authorization: "Bearer #{@user.access_token}"}
+    RestClient.put(SPOTIFY+"/me/player/play?device_id=#{@user.current_device_id}",nil, header)
+    render json: {success: "true"}
+  end
+
+  def pause
+    decodedId = JWT.decode(params[:jwt], ENV['MY_SECRET'], ENV["OTHER"])
+    @user = User.find(decodedId[0]["user_id"])
+    puts @user.current_device_id
+    header = {Authorization: "Bearer #{@user.access_token}"}
+    RestClient.put(SPOTIFY+"/me/player/pause?device_id=#{@user.current_device_id}",nil, header)
+    render json: {success: "true"}
+  end
+
+  def previous
+    decodedId = JWT.decode(params[:jwt], ENV['MY_SECRET'], ENV["OTHER"])
+    @user = User.find(decodedId[0]["user_id"])
+    header = {Authorization: "Bearer #{@user.access_token}"}
+  end
+
+  def next
+    decodedId = JWT.decode(params[:jwt], ENV['MY_SECRET'], ENV["OTHER"])
+    @user = User.find(decodedId[0]["user_id"])
+    header = {Authorization: "Bearer #{@user.access_token}"}
+  end
 end

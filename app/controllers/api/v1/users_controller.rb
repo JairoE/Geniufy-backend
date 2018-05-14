@@ -7,7 +7,7 @@ class Api::V1::UsersController < ApplicationController
       client_id: ENV["CLIENT_ID"],
       response_type: "code",
       redirect_uri: ENV["REDIRECT_URI"],
-      scope: "user-library-read user-library-modify user-top-read user-modify-playback-state playlist-modify-public playlist-modify-private user-read-currently-playing user-read-playback-state user-modify-playback-state streaming user-read-birthdate user-read-email user-read-private",
+      scope: "user-library-read user-library-modify playlist-read-private user-top-read user-modify-playback-state playlist-modify-public playlist-modify-private user-read-currently-playing user-read-playback-state user-modify-playback-state streaming user-read-birthdate user-read-email user-read-private",
       show_dialog: true
     }
 
@@ -59,34 +59,5 @@ class Api::V1::UsersController < ApplicationController
 
   end
 
-  def create
-
-  end
-
-  def show
-
-  end
-
-  def getPlaylists
-    decodedId = JWT.decode(params[:jwt], ENV['MY_SECRET'], ENV["OTHER"])
-    @user = User.find(decodedId[0]["user_id"])
-    header = {Authorization: "Bearer #{@user.access_token}"}
-    playlists = JSON.parse(RestClient.get((@user.href+"/playlists"), header))
-    render json: playlists["items"]
-  end
-
-  def getPlaylistTracks
-    decodedId = JWT.decode(params[:jwt], ENV['MY_SECRET'], ENV["OTHER"])
-    @user = User.find(decodedId[0]["user_id"])
-    header = {Authorization: "Bearer #{@user.access_token}"}
-    byebug
-    devices = JSON.parse(RestClient.get((SPOTIFY+"/me/player/devices"), header))["devices"]
-
-
-  end
-
-  def playTrack
-
-  end
 
 end

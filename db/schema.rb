@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180425191135) do
+ActiveRecord::Schema.define(version: 20180509152146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "annotation_threads", force: :cascade do |t|
+    t.integer "annotation_id"
+    t.integer "chained_annotation_Id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "annotations", force: :cascade do |t|
     t.integer "song_id"
@@ -58,6 +65,7 @@ ActiveRecord::Schema.define(version: 20180425191135) do
     t.string "refresh_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "current_device_id"
   end
 
 end
